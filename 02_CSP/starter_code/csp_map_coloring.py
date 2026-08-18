@@ -28,6 +28,13 @@ DOMAIN = ["Red", "Green", "Blue"]
 
 
 def is_consistent(assignment, var, value):
+    """Return True if assigning value to var does not conflict with neighbours."""
+
+    for neighbour in NEIGHBOURS[var]:
+        if neighbour in assignment and assignment[neighbour] == value:
+            return False
+
+    return True
     """TODO: return True if assigning `value` to `var` does not conflict
     with any already-assigned neighbour of `var`.
 
@@ -38,6 +45,13 @@ def is_consistent(assignment, var, value):
 
 
 def select_unassigned_variable(assignment):
+    """Return the first unassigned variable."""
+
+    for variable in VARIABLES:
+        if variable not in assignment:
+            return variable
+
+    return None
     """TODO: return the name of a variable from VARIABLES that is not yet
     a key in `assignment`. Return None if all variables are assigned.
 
@@ -49,6 +63,45 @@ def select_unassigned_variable(assignment):
 
 
 def backtracking_search(variables, domain):
+    """Run backtracking search."""
+
+    def backtrack(assignment):
+
+        # Step 1: complete assignment
+        if len(assignment) == len(variables):
+            return assignment
+
+
+        # Step 2: choose variable
+        var = select_unassigned_variable(assignment)
+
+
+        # Step 3: try each colour
+        for value in domain:
+
+            # Step 4: check constraints
+            if is_consistent(assignment, var, value):
+
+                assignment[var] = value
+
+
+                # Step 5: recurse
+                result = backtrack(assignment)
+
+
+                if result is not None:
+                    return result
+
+
+                # Step 6: undo assignment
+                del assignment[var]
+
+
+        # Step 7: failure
+        return None
+
+
+    return backtrack({})
     """TODO: run backtracking search and return a complete, consistent
     assignment (dict {variable: value}), or None if no solution exists.
 
@@ -77,3 +130,4 @@ if __name__ == "__main__":
             print(f"  {region}: {solution[region]}")
     else:
         print("No solution exists with this domain.")
+

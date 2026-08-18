@@ -57,7 +57,16 @@ def test_given_example():
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
 def test_case_1():
-    raise NotImplementedError("TODO: design and implement test case 1")
+    # Category: typical/solvable case.
+    # Chosen because the Australia map should have a valid colouring
+    # using three available colours.
+
+    from csp_map_coloring import VARIABLES, NEIGHBOURS, DOMAIN
+
+    solution = backtracking_search(VARIABLES, DOMAIN)
+
+    assert solution is not None
+    assert _is_valid_solution(solution, VARIABLES, NEIGHBOURS)
 
 
 # ---------------------------------------------------------------------
@@ -65,17 +74,33 @@ def test_case_1():
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
 def test_case_2():
-    raise NotImplementedError("TODO: design and implement test case 2")
+    # Category: constraint checking / edge case.
+    # Chosen because it checks whether assigning the same colour
+    # to neighbouring regions is correctly rejected.
 
+    assignment = {
+        "WA": "Red"
+    }
 
+    assert is_consistent(assignment, "NT", "Red") is False
+    assert is_consistent(assignment, "NT", "Green") is True
 # ---------------------------------------------------------------------
 # TODO Test Case 3
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
 def test_case_3():
-    raise NotImplementedError("TODO: design and implement test case 3")
+    # Category: unsolvable/over-constrained case.
+    # Chosen because using only one colour cannot satisfy all adjacency
+    # constraints in the Australia map.
+
+    from csp_map_coloring import VARIABLES
+
+    solution = backtracking_search(VARIABLES, ["Red"])
+
+    assert solution is None
 
 
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-v"]))
+
